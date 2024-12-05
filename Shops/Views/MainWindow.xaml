@@ -1,0 +1,181 @@
+﻿<Window x:Class="Shops.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Shops"
+        xmlns:vm="clr-namespace:Shops.ViewModels"
+        mc:Ignorable="d"
+        Title="Лабораторная работа 3" Height="600" Width="612" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <TabControl>
+            <TabItem Header="Просмотр">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Все магазины" Margin="5"/>
+                        <ListBox Margin="5" ItemsSource="{Binding Shops}" DisplayMemberPath="TitleShop" SelectedItem="{Binding SelectedShop}"></ListBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Все продукты" Margin="5"/>
+                        <ListBox Margin="5" ItemsSource="{Binding Products}"></ListBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Продукты выбранного магазина" Margin="5"/>
+                        <ListBox ItemsSource="{Binding AssortmentSelectedShop}" DisplayMemberPath="Product" Margin="5"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Сервисы">
+                <StackPanel>
+                    <Expander Header="Базовые">
+                        <StackPanel>
+                            <WrapPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Название" Margin="5"/>
+                                    <TextBox Text="{Binding TitleShop}" MinWidth="100" Margin="5"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Адрес" Margin="5"/>
+                                    <TextBox Text="{Binding AddressShop}" MinWidth="100" Margin="5"/>
+                                </StackPanel>
+                                <Button Content="Создать магазин" Command="{Binding CreateShop}" Margin="5" Width="110" Height="20" VerticalAlignment="Bottom"/>
+                            </WrapPanel>
+                            <WrapPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Название" Margin="5"/>
+                                    <TextBox Text="{Binding TitleProduct}" MinWidth="100" Margin="5"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Стоимость" Margin="5"/>
+                                    <TextBox Text="{Binding PriceProduct}" MinWidth="100" Margin="5"/>
+                                </StackPanel>
+                                <Button Content="Создать продукт" Command="{Binding CreateProduct}" Margin="5" Width="110" Height="20" VerticalAlignment="Bottom"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Expander>
+                    <Expander Header="Дополнительные">
+                        <StackPanel>
+                            <GroupBox Header="Завезти партию товаров в магазин">
+                                <Grid MinHeight="100">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="150"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <TextBlock Text="Товар" Grid.Column="0" Grid.Row="0" Margin="5"/>
+                                    <TextBlock Text="Количество товара" Grid.Column="1" Grid.Row="0" Margin="5"/>
+                                    <TextBlock Text="Стоимость за единицу" Grid.Column="2" Grid.Row="0" Margin="5"/>
+                                    <TextBlock Text="Магазин" Grid.Column="3" Grid.Row="0" Margin="5"/>
+
+                                    <ComboBox ItemsSource="{Binding Products}" SelectedItem="{Binding PackProduct.Product}" Grid.Row="1" Grid.Column="0" Margin="5"/>
+                                    <TextBox Text="{Binding PackProduct.Count}" Grid.Row="1" Grid.Column="1" Margin="5"/>
+                                    <TextBox Text="{Binding PackProduct.Price}" Grid.Row="1" Grid.Column="2" Margin="5"/>
+                                    <ComboBox ItemsSource="{Binding Shops}" SelectedItem="{Binding PackProduct.Shop}" Grid.Row="1" Grid.Column="3" Margin="5" Width="150"/>
+
+                                    <Button Command="{Binding AddPackProducts}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="5" Width="150" Content="Добавить" HorizontalAlignment="Left"/>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Header="Найти, где самый дешевый товар">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Продукт" Margin="5" Grid.Row="0" Grid.Column="0"/>
+                                    <ComboBox ItemsSource="{Binding Products}" SelectedItem="{Binding MinPriceProduct.Product}" Grid.Row="1" Grid.Column="0" DisplayMemberPath="TitleProduct" Margin="5"/>
+                                    <Button Content="Найти" Command="{Binding GetMinPriceProduct}" Grid.Row="1" Grid.Column="1" Margin="5"/>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Header="Что можно купить на указанную сумму">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Сумма" Grid.Column="0" Grid.Row="0" Margin="5"/>
+                                    <TextBox Text="{Binding WhatCanBuy.Money}" Margin="5" Grid.Row="1" Grid.Column="0"/>
+
+                                    <TextBlock Text="Магазин" Grid.Row="0" Grid.Column="1" Margin="5"/>
+                                    <ComboBox ItemsSource="{Binding Shops}" SelectedItem="{Binding WhatCanBuy.Shop}" Grid.Row="1" Grid.Column="1" Margin="5"/>
+                                    <Button Command="{Binding GetWhatCanBuy}" Grid.Row="1" Grid.Column="2" Margin="5" Content="Узнать"/>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Header="Купить партию товаров в магазине">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <TextBlock Margin="5" Text="Количество" Grid.Row="0" Grid.Column="0"/>
+                                    <TextBlock Margin="5" Text="Товар" Grid.Row="0" Grid.Column="1"/>
+                                    <TextBlock Margin="5" Text="Магазин" Grid.Row="0" Grid.Column="2"/>
+
+                                    <TextBox Text="{Binding BuyPackProductInShop.Count}" Grid.Row="1" Grid.Column="0" Margin="5"/>
+                                    <ComboBox ItemsSource="{Binding Products}" DisplayMemberPath="TitleProduct" SelectedItem="{Binding BuyPackProductInShop.Product}" Grid.Row="1" Grid.Column="1" Margin="5"/>
+                                    <ComboBox ItemsSource="{Binding Shops}" DisplayMemberPath="TitleShop" SelectedItem="{Binding BuyPackProductInShop.Shop}" Grid.Row="1" Grid.Column="2" Margin="5"/>
+                                    <Button Content="Купить" Command="{Binding GetBuyPackProductInShop}" Margin="5" Grid.Row="1" Grid.Column="3"/>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Header="Где дешевле купить партию товаров">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Товар" Grid.Row="0" Grid.Column="0" Margin="5"/>
+                                    <TextBlock Text="Количество" Grid.Row="0" Grid.Column="1" Margin="5"/>
+
+                                    <ComboBox ItemsSource="{Binding Products}" DisplayMemberPath="TitleProduct" SelectedItem="{Binding BuyPackLowPrice.Product}" Margin="5" Grid.Row="1" Grid.Column="0"/>
+                                    <TextBox Text="{Binding BuyPackLowPrice.Count}" Grid.Row="1" Grid.Column="1" Margin="5"/>
+                                    <Button Command="{Binding GetBuyPackLowPrice}" Content="Найти" Grid.Row="1" Grid.Column="2" Margin="5"/>
+                                </Grid>
+                            </GroupBox>
+                        </StackPanel>
+                    </Expander>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+        
+
+
+    </Grid>
+</Window>
